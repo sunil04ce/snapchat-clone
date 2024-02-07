@@ -2,7 +2,8 @@ import NextAuth from "next-auth";
 import GitHub from "next-auth/providers/github";
 import { connectToMongoDB } from "./lib/db";
 import User from "./models/userModel";
-export const { handlers, auth } = NextAuth({
+
+export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID,
@@ -17,6 +18,7 @@ export const { handlers, auth } = NextAuth({
 
         try {
           const user = await User.findOne({ email: profile?.email });
+
           // signup the user if not found
           if (!user) {
             const newUser = await User.create({
@@ -25,15 +27,17 @@ export const { handlers, auth } = NextAuth({
               fullName: profile?.name,
               avatar: profile?.avatar_url,
             });
+
             await newUser.save();
           }
-          return true; // indicate successfull signin
+          return true; // indicate successful sign-in
         } catch (error) {
           console.log(error);
-          return false; // indicate failed signin
+          return false; // indicate failed sign-in
         }
       }
-      return false; // indicate failed signin
+
+      return false; // indicate failed sign-in
     },
   },
 });

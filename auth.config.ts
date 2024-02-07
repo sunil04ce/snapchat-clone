@@ -15,7 +15,9 @@ export const authConfig = {
       request: NextRequest;
     }) {
       const user = auth?.user;
+
       const isVisitingChatPage = request.nextUrl.pathname.startsWith("/chat");
+
       const isVisitingAuthPage =
         request.nextUrl.pathname.startsWith("/login") ||
         request.nextUrl.pathname.startsWith("/signup");
@@ -27,6 +29,7 @@ export const authConfig = {
       if (user && isVisitingAuthPage) {
         return Response.redirect(new URL("/chat", request.nextUrl));
       }
+
       return true;
     },
   },

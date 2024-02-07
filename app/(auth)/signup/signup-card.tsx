@@ -2,11 +2,17 @@ import React from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { signIn } from "@/auth";
 
 export default function SignupCard() {
+  // inline server action: in client components cannot be used as inline. You have to put it in a file and import it.
+  async function authAction() {
+    "use server";
+    await signIn("github");
+  }
   return (
     <>
-      <form className="space-y-4">
+      <form action={authAction} className="space-y-4">
         <SignUpButton />
       </form>
       <div className="mt-4 text-center text-[13px]">
